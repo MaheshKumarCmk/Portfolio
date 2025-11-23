@@ -33,7 +33,8 @@ const CircuitBackground: React.FC = () => {
       height = window.innerHeight;
       canvas.width = width;
       canvas.height = height;
-      init();
+      // Re-initialize pulses on resize to fit new dimensions
+      pulses = []; 
     };
 
     const getRandomGridPoint = (): Point => {
@@ -74,14 +75,10 @@ const CircuitBackground: React.FC = () => {
       return result;
     };
 
-    const init = () => {
-      pulses = [];
-      for (let i = 0; i < pulseCount; i++) {
-        spawnPulse();
-      }
-    };
-
     const spawnPulse = () => {
+      // Safety check for dimensions
+      if (width === 0 || height === 0) return;
+
       const start = getRandomGridPoint();
       const end = getRandomGridPoint();
       const path = generatePath(start, end);
@@ -94,13 +91,11 @@ const CircuitBackground: React.FC = () => {
           speed: 0.2 + Math.random() * 0.3,
           bits: generateBinaryString(20) // Generate a string of 20 bits
         });
-      } else {
-        // Retry if path is too short
-        if (Math.random() > 0.5) spawnPulse(); 
       }
     };
 
     const draw = () => {
+      if (!ctx) return;
       ctx.clearRect(0, 0, width, height);
       
       ctx.font = '12px "Fira Code", monospace';
@@ -115,7 +110,6 @@ const CircuitBackground: React.FC = () => {
         pulse.currentIndex += pulse.speed;
 
         // Draw bits along the trail
-        // We iterate backwards from the current index
         const trailLength = pulse.bits.length;
         
         for (let j = 0; j < trailLength; j++) {
@@ -126,8 +120,6 @@ const CircuitBackground: React.FC = () => {
             const bit = pulse.bits[j];
             
             // Calculate opacity: Head is bright, tail fades out
-            // Also fade out if the pulse is nearing the end of its path visually? 
-            // Simple fade based on position in the string (j)
             const opacity = 1 - (j / trailLength);
             
             if (opacity > 0) {
@@ -152,21 +144,24 @@ const CircuitBackground: React.FC = () => {
         // Respawn if the tail has finished the path
         if (pulse.currentIndex - trailLength >= pulse.path.length) {
           pulses.splice(i, 1);
-          spawnPulse();
         }
       }
       
-      // Maintain pulse count
-      while(pulses.length < pulseCount) {
+      // Maintain pulse count with safety break to prevent infinite loop
+      let attempts = 0;
+      while(pulses.length < pulseCount && attempts < 5) {
         spawnPulse();
+        attempts++;
       }
 
       animationFrameId = requestAnimationFrame(draw);
     };
 
     window.addEventListener('resize', resize);
-    resize();
-    draw();
+    resize(); // Initial sizing
+    
+    // Start animation loop
+    animationFrameId = requestAnimationFrame(draw);
 
     return () => {
       window.removeEventListener('resize', resize);
