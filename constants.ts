@@ -1,5 +1,4 @@
 import { Experience, Project, Education, SkillCategory } from './types';
-import { Mail, Phone, MapPin, Linkedin, Github } from 'lucide-react';
 
 export const PERSONAL_INFO = {
   name: "Mahesh Kumar Chandrappa",
