@@ -9,7 +9,6 @@ import {
   Phone, 
   MapPin, 
   Terminal, 
-  Download,
   Zap,
   Layers,
   Power,
@@ -104,7 +103,8 @@ const Microchip: React.FC<MicrochipProps> = ({ onClick, isBooting }) => {
 
 // --- Reusable UI Components ---
 
-const SectionTitle: React.FC<{ children: React.ReactNode; icon: any }> = ({ children, icon: Icon }) => (
+// Updated type definition for icon to ensure it accepts React Components correctly
+const SectionTitle: React.FC<{ children: React.ReactNode; icon: React.ElementType }> = ({ children, icon: Icon }) => (
   <div className="flex items-center gap-3 mb-8 border-b border-slate-800 pb-4">
     <div className="p-2 bg-circuit-trace rounded-lg border border-circuit-accent/30 shadow-[0_0_15px_rgba(6,182,212,0.1)]">
       <Icon className="w-6 h-6 text-circuit-accent" />
@@ -158,7 +158,7 @@ function App() {
     <div className="min-h-screen bg-circuit-bg text-slate-300 font-sans selection:bg-circuit-accent selection:text-circuit-bg overflow-x-hidden">
       <CircuitBackground />
 
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {!isSystemReady ? (
           <motion.div 
             key="intro"

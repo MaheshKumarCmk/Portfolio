@@ -6,6 +6,23 @@
     <title>Mahesh Kumar Chandrappa | Embedded Engineer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Global Error Handler to catch any startup issues -->
+    <script>
+      window.onerror = function(message, source, lineno, colno, error) {
+        const root = document.getElementById('root');
+        if (root && root.innerHTML === "") {
+          root.innerHTML = `
+            <div style="color: #ff5555; background: #1a1a1a; padding: 20px; font-family: monospace; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+              <h2 style="font-size: 24px; margin-bottom: 10px;">⚠️ Application Error</h2>
+              <p style="max-width: 600px; color: #ccc;">${message}</p>
+            </div>
+          `;
+        }
+        console.error("App Error:", error);
+      };
+    </script>
+
     <script>
       tailwind.config = {
         theme: {
@@ -53,18 +70,20 @@
         background: #475569;
       }
     </style>
-  <script type="importmap">
+    <!-- STRICT IMPORT MAP: React 19 RC + Compatible Deps -->
+    <script type="importmap">
 {
   "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react": "https://esm.sh/react@19.0.0-rc-66855b96-20241106",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0-rc-66855b96-20241106/client",
+    "lucide-react": "https://esm.sh/lucide-react@0.263.1?external=react,react-dom",
+    "framer-motion": "https://esm.sh/framer-motion@11.0.8?external=react,react-dom",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
-    "framer-motion": "https://aistudiocdn.com/framer-motion@^12.23.24"
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
   }
 }
 </script>
-</head>
+  </head>
   <body>
     <div id="root"></div>
   </body>
